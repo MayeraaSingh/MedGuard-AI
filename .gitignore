@@ -51,6 +51,7 @@ data/samples/*.json
 data/samples/pdfs/*.pdf
 data/processed/
 data/temp/
+data/output/*
 
 # Logs
 *.log
