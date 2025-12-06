@@ -43,6 +43,9 @@ fuzzywuzzy==0.18.0
 pytest==7.4.3
 pytest-asyncio==0.21.1
 
+# PDF to Image conversion
+pdf2image==1.16.3
+
 # Google ADK
 google-genai
 

@@ -196,7 +196,7 @@ async def run_validation_pipeline(job_id: str, file_path: str, batch_size: int):
     
     Args:
         job_id: Job identifier
-        file_path: Path to CSV file
+        file_path: Path to CSV or PDF file
         batch_size: Batch size for processing
     """
     import sys
@@ -205,15 +205,34 @@ async def run_validation_pipeline(job_id: str, file_path: str, batch_size: int):
     
     try:
         from app.orchestrator_adk import AgentOrchestratorADK
+        from app.ocr import OCROrchestrator
         import pandas as pd
         
         # Update job status
         validation_jobs[job_id]["status"] = ValidationStatus.PROCESSING
         validation_jobs[job_id]["started_at"] = datetime.now()
         
-        # Load providers
-        df = pd.read_csv(file_path)
-        providers = df.to_dict('records')
+        # Determine file type and load providers
+        file_path_obj = Path(file_path)
+        
+        if file_path_obj.suffix.lower() == '.pdf':
+            # Process PDF with OCR
+            ocr_orchestrator = OCROrchestrator()
+            ocr_result = ocr_orchestrator.process_pdf(str(file_path_obj))
+            
+            if not ocr_result['success']:
+                raise Exception(f"OCR failed: {ocr_result.get('error')}")
+            
+            # Convert to validation format
+            provider_data = ocr_orchestrator.extract_to_validation_format(ocr_result)
+            providers = [provider_data] if provider_data else []
+            validation_jobs[job_id]["source_type"] = "pdf"
+        else:
+            # Load CSV
+            df = pd.read_csv(file_path)
+            providers = df.to_dict('records')
+            validation_jobs[job_id]["source_type"] = "csv"
+        
         validation_jobs[job_id]["providers_total"] = len(providers)
         
         # Run orchestrator
