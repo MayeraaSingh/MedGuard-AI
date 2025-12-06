@@ -1,0 +1,48 @@
+# MedGuard AI - Backend Dependencies
+# Phase 1: Data Layer & Input Pipeline
+
+# Data Generation & Manipulation
+Faker==22.0.0
+pandas==2.1.4
+numpy==1.26.2
+
+# PDF Generation & OCR
+reportlab==4.0.7
+PyPDF2==3.0.1
+Pillow==10.1.0
+pytesseract==0.3.10
+
+# Database & ORM
+SQLAlchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# Configuration & Environment
+python-dotenv==1.0.0
+
+# FastAPI & Web Framework (for Phase 3)
+fastapi==0.108.0
+uvicorn[standard]==0.25.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Background Tasks (for Phase 3)
+celery==5.3.4
+redis==5.0.1
+
+# Web Scraping & APIs (for Phase 5)
+requests==2.31.0
+beautifulsoup4==4.12.2
+selenium==4.16.0
+lxml==4.9.4
+
+# Data Validation & Fuzzy Matching
+python-Levenshtein==0.23.0
+fuzzywuzzy==0.18.0
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+
+# Utilities
+tqdm==4.66.1
+python-dateutil==2.8.2

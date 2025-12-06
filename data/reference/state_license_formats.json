@@ -1,0 +1,89 @@
+{
+  "metadata": {
+    "description": "State medical license format specifications for validation",
+    "purpose": "Enable validation of synthetic license numbers",
+    "last_updated": "2025-12-06"
+  },
+  "license_formats": {
+    "CA": {
+      "state": "California",
+      "format": "A#####",
+      "pattern": "^[A-Z]\\d{5}$",
+      "example": "A12345",
+      "issuing_authority": "Medical Board of California",
+      "verification_url": "https://www.mbc.ca.gov/"
+    },
+    "NY": {
+      "state": "New York",
+      "format": "######",
+      "pattern": "^\\d{6}$",
+      "example": "123456",
+      "issuing_authority": "New York State Education Department",
+      "verification_url": "http://www.op.nysed.gov/"
+    },
+    "TX": {
+      "state": "Texas",
+      "format": "L####",
+      "pattern": "^[A-Z]\\d{4}$",
+      "example": "M1234",
+      "issuing_authority": "Texas Medical Board",
+      "verification_url": "https://www.tmb.state.tx.us/"
+    },
+    "FL": {
+      "state": "Florida",
+      "format": "ME#####",
+      "pattern": "^ME\\d{5}$",
+      "example": "ME12345",
+      "issuing_authority": "Florida Department of Health",
+      "verification_url": "https://flhealthsource.gov/"
+    },
+    "IL": {
+      "state": "Illinois",
+      "format": "036.######",
+      "pattern": "^036\\.\\d{6}$",
+      "example": "036.123456",
+      "issuing_authority": "Illinois Department of Financial and Professional Regulation",
+      "verification_url": "https://www.idfpr.com/"
+    },
+    "PA": {
+      "state": "Pennsylvania",
+      "format": "MD######L",
+      "pattern": "^MD\\d{6}[A-Z]$",
+      "example": "MD123456L",
+      "issuing_authority": "Pennsylvania State Board of Medicine",
+      "verification_url": "https://www.dos.pa.gov/ProfessionalLicensing/"
+    },
+    "OH": {
+      "state": "Ohio",
+      "format": "##.######",
+      "pattern": "^\\d{2}\\.\\d{6}$",
+      "example": "35.123456",
+      "issuing_authority": "State Medical Board of Ohio",
+      "verification_url": "https://med.ohio.gov/"
+    },
+    "GA": {
+      "state": "Georgia",
+      "format": "######",
+      "pattern": "^\\d{6}$",
+      "example": "012345",
+      "issuing_authority": "Georgia Composite Medical Board",
+      "verification_url": "https://gcmb.georgia.gov/"
+    },
+    "NC": {
+      "state": "North Carolina",
+      "format": "#####",
+      "pattern": "^\\d{5}$",
+      "example": "12345",
+      "issuing_authority": "North Carolina Medical Board",
+      "verification_url": "https://www.ncmedboard.org/"
+    },
+    "MI": {
+      "state": "Michigan",
+      "format": "####-######",
+      "pattern": "^\\d{4}-\\d{6}$",
+      "example": "4301-123456",
+      "issuing_authority": "Michigan Department of Licensing and Regulatory Affairs",
+      "verification_url": "https://www.michigan.gov/lara/"
+    }
+  }
+}

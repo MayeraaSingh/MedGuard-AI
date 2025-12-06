@@ -1,0 +1,64 @@
+{
+  "metadata": {
+    "description": "Healthcare Provider Taxonomy Codes - Simplified reference for MedGuard AI",
+    "source": "National Uniform Claim Committee (NUCC)",
+    "last_updated": "2025-12-06"
+  },
+  "taxonomy_codes": {
+    "207Q00000X": {
+      "specialty": "Family Medicine",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "207R00000X": {
+      "specialty": "Internal Medicine",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "208000000X": {
+      "specialty": "Pediatrics",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "207RC0000X": {
+      "specialty": "Cardiology",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "207N00000X": {
+      "specialty": "Dermatology",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "207X00000X": {
+      "specialty": "Orthopedic Surgery",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "2084P0800X": {
+      "specialty": "Psychiatry",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "207V00000X": {
+      "specialty": "Obstetrics & Gynecology",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "207P00000X": {
+      "specialty": "Emergency Medicine",
+      "classification": "Allopathic & Osteopathic Physicians",
+      "typical_degree": ["MD", "DO"]
+    },
+    "363L00000X": {
+      "specialty": "Nurse Practitioner",
+      "classification": "Physician Assistants & Advanced Practice Nursing Providers",
+      "typical_degree": ["NP", "MSN", "DNP"]
+    },
+    "363A00000X": {
+      "specialty": "Physician Assistant",
+      "classification": "Physician Assistants & Advanced Practice Nursing Providers",
+      "typical_degree": ["PA", "PA-C"]
+    }
+  }
+}
