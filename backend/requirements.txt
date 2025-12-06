@@ -46,6 +46,11 @@ pytest-asyncio==0.21.1
 # Google ADK
 google-genai
 
+# FastAPI
+fastapi==0.108.0
+uvicorn[standard]==0.25.0
+python-multipart==0.0.6
+
 # Utilities
 tqdm==4.66.1
 python-dateutil==2.8.2
