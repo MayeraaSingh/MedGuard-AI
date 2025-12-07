@@ -4,6 +4,8 @@ Tesseract OCR integration with confidence scoring
 """
 
 import logging
+import os
+from pathlib import Path
 from typing import Dict, Any, List, Optional
 from PIL import Image
 import pytesseract
@@ -23,8 +25,21 @@ class TextExtractor:
             tesseract_cmd: Path to tesseract executable (auto-detect if None)
             lang: Language for OCR (default 'eng')
         """
+        # Auto-configure Tesseract path for Windows
         if tesseract_cmd:
             pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
+        elif os.name == 'nt':  # Windows
+            # Try common Windows installation paths
+            common_paths = [
+                r"C:\Program Files\Tesseract-OCR\tesseract.exe",
+                r"C:\Program Files (x86)\Tesseract-OCR\tesseract.exe",
+                os.path.join(os.environ.get('LOCALAPPDATA', ''), 'Tesseract-OCR', 'tesseract.exe'),
+            ]
+            for path in common_paths:
+                if Path(path).exists():
+                    pytesseract.pytesseract.tesseract_cmd = path
+                    logger.info(f"Auto-configured Tesseract: {path}")
+                    break
         
         self.lang = lang
         logger.info(f"Initialized TextExtractor with language={lang}")
