@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>MedGuard AI - Test Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+        
+        .btn:hover:not(:disabled) {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .results {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2rem;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .status-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .status-error {
+            background: #f56565;
+            color: white;
+        }
+        
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #f56565;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 MedGuard AI</h1>
+            <p class="subtitle">Test Dashboard - Phase 1-5 Validation</p>
+        </header>
+
+        <div class="card">
+            <h2>🧪 Run Test Suites</h2>
+            <p style="margin: 15px 0; color: #666;">Click any button below to execute the test suite and view results:</p>
+            
+            <div class="button-grid">
+                <button class="btn" onclick="runTest('phase1')">Phase 1: Data Generation</button>
+                <button class="btn" onclick="runTest('phase2')">Phase 2: ADK Agents</button>
+                <button class="btn" onclick="runTest('phase3')">Phase 3: FastAPI Backend</button>
+                <button class="btn" onclick="runTest('phase4')">Phase 4: OCR Pipeline</button>
+                <button class="btn" onclick="runTest('phase5')">Phase 5: API Integrations</button>
+                <button class="btn" onclick="runTest('all')" style="background: #48bb78;">🚀 Run All Tests</button>
+            </div>
+        </div>
+
+        <div class="card" id="results-container" style="display: none;">
+            <h2>📊 Test Results</h2>
+            <div id="results-output"></div>
+        </div>
+    </div>
+
+    <script>
+        let isRunning = false;
+
+        async function runTest(phase) {
+            if (isRunning) return;
+            
+            isRunning = true;
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(btn => btn.disabled = true);
+            
+            const resultsContainer = document.getElementById('results-container');
+            const resultsOutput = document.getElementById('results-output');
+            
+            resultsContainer.style.display = 'block';
+            resultsOutput.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Running ${phase === 'all' ? 'all tests' : phase.toUpperCase()}...</p>
+                    <p style="font-size: 0.9rem; color: #999; margin-top: 10px;">This may take a few moments</p>
+                </div>
+            `;
+            
+            try {
+                const response = await fetch(`http://localhost:8000/test/${phase}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                const statusBadge = data.passed 
+                    ? '<span class="status-badge status-success">✓ PASSED</span>'
+                    : '<span class="status-badge status-error">✗ FAILED</span>';
+                
+                const output = escapeHtml(data.output || 'No output received');
+                
+                resultsOutput.innerHTML = `
+                    ${statusBadge}
+                    <h3 style="margin-bottom: 15px; color: #2d3748;">${data.test_name || phase.toUpperCase()}</h3>
+                    <div class="results"><pre>${output}</pre></div>
+                `;
+                
+            } catch (error) {
+                resultsOutput.innerHTML = `
+                    <span class="status-badge status-error">✗ ERROR</span>
+                    <div class="error-message">
+                        <strong>Error:</strong> ${escapeHtml(error.message)}<br><br>
+                        <strong>Troubleshooting:</strong><br>
+                        • Make sure the backend server is running on port 8000<br>
+                        • Check that CORS is enabled in the backend<br>
+                        • Verify the backend terminal for error messages
+                    </div>
+                `;
+            } finally {
+                isRunning = false;
+                buttons.forEach(btn => btn.disabled = false);
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

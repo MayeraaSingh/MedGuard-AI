@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 import time
+import os
 
 from .routers import upload, validation, providers
 
@@ -76,8 +77,10 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",  # React dev server
         "http://localhost:5173",  # Vite dev server
+        "http://localhost:8080",  # Simple frontend
         "http://127.0.0.1:3000",
-        "http://127.0.0.1:5173"
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:8080"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -124,6 +127,116 @@ async def health_check():
         "version": APP_VERSION,
         "timestamp": time.time()
     }
+
+
+# Test runner endpoint
+@app.post("/test/{phase}", tags=["Testing"])
+async def run_test(phase: str):
+    """Run test suite for specified phase."""
+    import subprocess
+    import sys
+    from pathlib import Path
+    
+    # Map phase to test script
+    test_scripts = {
+        'phase1': 'scripts/test_phase1.py',
+        'phase2': 'scripts/test_phase2.py',
+        'phase3': 'scripts/test_phase3.py',
+        'phase4': 'scripts/test_phase4.py',
+        'phase5': 'scripts/test_phase5.py',
+    }
+    
+    # Get project root (parent of backend/)
+    project_root = Path(__file__).parent.parent.parent
+    
+    if phase == 'all':
+        # Run all tests sequentially
+        all_output = []
+        all_passed = True
+        for p in ['phase1', 'phase2', 'phase3', 'phase4', 'phase5']:
+            script = test_scripts.get(p)
+            script_path = project_root / script
+            if script_path.exists():
+                result = subprocess.run(
+                    [sys.executable, str(script_path)],
+                    capture_output=True,
+                    text=True,
+                    timeout=300,
+                    cwd=str(project_root),
+                    encoding='utf-8',
+                    errors='replace'
+                )
+                all_output.append(f"\n{'='*70}\n{p.upper()}\n{'='*70}\n{result.stdout}")
+                if result.returncode != 0:
+                    all_passed = False
+        
+        return {
+            "test_name": "All Phases",
+            "output": '\n'.join(all_output),
+            "passed": all_passed
+        }
+    
+    script = test_scripts.get(phase)
+    if not script:
+        return {
+            "test_name": phase,
+            "output": f"Unknown phase: {phase}",
+            "passed": False
+        }
+    
+    script_path = project_root / script
+    
+    if not script_path.exists():
+        return {
+            "test_name": phase,
+            "output": f"Test script not found: {script_path}",
+            "passed": False
+        }
+    
+    try:
+        # Run the test script from project root with UTF-8 encoding
+        # Set PYTHONIOENCODING to force UTF-8 for Windows
+        env = os.environ.copy()
+        env['PYTHONIOENCODING'] = 'utf-8'
+        
+        result = subprocess.run(
+            [sys.executable, str(script_path)],
+            capture_output=True,
+            text=True,
+            timeout=120,
+            cwd=str(project_root),
+            encoding='utf-8',
+            errors='replace',
+            env=env
+        )
+        
+        # Combine stdout and stderr for full output
+        output = result.stdout or ""
+        if result.stderr:
+            output += "\n\n=== ERRORS ===\n" + result.stderr
+        
+        if not output:
+            output = "Test completed but produced no output"
+        
+        return {
+            "test_name": f"Phase {phase[-1]}",
+            "output": output,
+            "passed": result.returncode == 0,
+            "exit_code": result.returncode
+        }
+        
+    except subprocess.TimeoutExpired:
+        return {
+            "test_name": phase,
+            "output": "Test timed out after 120 seconds",
+            "passed": False
+        }
+    except Exception as e:
+        return {
+            "test_name": phase,
+            "output": f"Error running test: {str(e)}",
+            "passed": False
+        }
 
 
 # Exception handler
